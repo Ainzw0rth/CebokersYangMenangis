@@ -36,7 +36,7 @@ def CFG_to_CNF(CFG):
                 if len(rule_unit) == 1:
                     CFG[keySatuElemen].remove(rule_unit)
 
-    # STEP 3: Replace Body with 3 or more Variables
+    # STEP 3: ganti rules yang memiliki 3 atau lebih elemen
     RulesBaru = {}
     del_productions = {}
 
@@ -75,7 +75,7 @@ def CFG_to_CNF(CFG):
         for del_rule in del_body:
             CFG[del_head].remove(del_rule)
 
-    # STEP 4: Replace Terminal adjacent to a Variables
+    # STEP 4: ganti elemen yang terminal jadi variable rules baru
     RulesBaru = {}
     RulesLama = {}
 
