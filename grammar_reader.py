@@ -10,7 +10,7 @@ TERMINAL_SYMBOLS = [
     'CONST', 'TRY', 'CATCH', 'FINALLY', 
     'THROW', 'TRUE', 'FALSE', 'NULL', 'COMMENT', 'EXPRESSION', 
     'DEFS', 'VAR_NAME', 'FUNCTION_CALL', 'EPSILON', 
-    'NUMBER', 'STRING'
+    'NUMBER', 'STRING', 'CONSOLE'
     ]
 
 def is_terminal(x):

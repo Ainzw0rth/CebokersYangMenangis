@@ -57,6 +57,9 @@ STR_TO_GRAMMAR = {
     "false": "FALSE",
     "null": "NULL",
 
+# CONSOLE
+    "console.log": "CONSOLE",
+
 # SPECIAL VALUES
     "@CMT_SINGLE": "COMMENT_STMT",
     "@CMT_MULTI": "COMMENT_STMT",
@@ -78,7 +81,7 @@ def rearrange_string(string):
         "!=", "&&", "||", "!", "===", "!==", ">>", "<<", ">>>", "&", "|", "~", "&&=", "||=", "&=", "|=", 
         "^=", "+=", "-=", "*=", "/=", "%=", "<<=", ">>=", ">>>=", "^=", "**", "**=", ";", "for", "in", "of", "while",
         "do", "break", "continue", "return", "async", "await", "function", "var", "let", "const", "try", "catch",
-        "finally", "throw", "true", "false", "null", "\n"
+        "finally", "throw", "true", "false", "null", "CONSOLE", "\n"
     ]
 
     DONT_SPACE = [
@@ -144,7 +147,7 @@ def handle_special_value(string):
     object_operator = ["."]
 
     defs = ["let", "var", "const"]
-    exp_start = ["(", "[", "{", "true", "false", "null", "function", "async", "await", "try", "throw", "for", "while", "do", "if", "switch", "return", "break", "continue", ";"]
+    exp_start = ["(", "[", "{", "true", "false", "null", "function", "async", "await", "try", "throw", "for", "while", "do", "if", "switch", "return", "break", "continue", "CONSOLE", ";"]
     exp_end = [")", "]", "}", ";", "else", "catch", "finally", "in", "of", "for", "while", "do", "if", "switch", "return", "break", "continue"]
     def_end = [";", "\n", ""]
     
