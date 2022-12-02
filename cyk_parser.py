@@ -111,7 +111,7 @@ def CYK(CNF, input):
                                 table[i - 1][j].append(prod)
     
 
-    print_table(table)
+    #print_table(table)
     # Cek apakah Start Symbol ada di tabel CYK paling atas
     if CNF[3] in get_list_highest_from_left(table) or CNF[3] in get_list_highest_from_top(table):
         return True
