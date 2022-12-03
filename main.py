@@ -40,7 +40,7 @@ def parseFile(filename):
     print("Variable valid: ", variableValid)
 
     # # Get The CNF
-    CFG = cfg_from_file("grammarbener.txt")
+    CFG = cfg_from_file("grammarNew.txt")
     V = CFG_to_CNF(CFG[2])
     CNF = (CFG[0], CFG[1], V, CFG[3])
     
