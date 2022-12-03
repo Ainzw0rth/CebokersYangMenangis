@@ -144,8 +144,8 @@ def handle_special_value(string):
     object_operator = ["."]
 
     defs = ["let", "var", "const"]
-    exp_start = ["(", "[", "{", "true", "false", "null", "function", "async", "await", "try", "throw", "for", "while", "do", "if", "switch", "return", "break", "continue", ";"]
-    exp_end = [")", "]", "}", ";", "else", "catch", "finally", "in", "of", "for", "while", "do", "if", "switch", "return", "break", "continue"]
+    exp_start = ["(", "[", "{", "true", "false", "null", "function", "async", "await", "try", "throw", "for", "while", "do", "if", "switch", "return", "break", "continue", ";", "f, :", "\n"]
+    exp_end = [")", "]", "}", ";", "else", "catch", "finally", "in", "of", "for", "while", "do", "if", "switch", "return", "break", "continue", ":", "\n"]
     def_end = [";", "\n", ""]
     
     i = 0
@@ -222,16 +222,20 @@ def handle_special_value(string):
             while j < len(string) and string[j] != " ": 
                 current_str += string[j]
                 j += 1
-            # Handling Variable
+            # Handling Variables
             if current_str not in STR_TO_GRAMMAR.keys() and not current_str.startswith("@"):
+                if current_str.startswith("\""):
+                    while not current_str.endswith("\"") and j < len(string) - 1:
+                        current_str += string[j]
+                        j += 1
                 if isNumber(current_str):
                     string = string[:i] + " @NUM " + string[j:]
-                elif isStringValid(current_str):
+                elif isStringValid(current_str.replace(" ", "")):
                     string = string[:i] + " @STR " + string[j:]
                 else:
                     list_of_variable.append(current_str)
                     string = string[:i] + " @VAR " + string[j:]
-                i = i + 5
+                i = i + 6
             else:
                 i = j 
         else:
@@ -265,6 +269,5 @@ def string_to_grammar(string):
         else:
             converted_str.append(init_str[i])
 
-    converted_str.append(STR_TO_GRAMMAR["\n"])
     # print(converted_str)
     return converted_str, expressions, variables

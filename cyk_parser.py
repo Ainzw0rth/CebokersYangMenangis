@@ -21,47 +21,29 @@ def print_table(table):
     i = len(table) - 1
     for row in table[::-1]:
         print(row[:len(row)-i])
-        i -= 1
+        i -= 1  
 
-def CYK_parse(CNF, string_input):
-    W = string_input
-    N = len(W)
-    T = [[set([]) for j in range(N)] for i in range(N)]
+# def CYK_parse(CNF, string_input):
+#     W = string_input
+#     N = len(W)
+#     T = [[[] for j in range(N)] for i in range(N)]
 
-    for j in range(N):
-        for head, body in CNF.items():
-            for rule in body:
-                if len(rule) == 1 and rule[0] == W[j]:
-                    T[j][j].add(head)
+#     for j in range(N):
+#         for head, body in CNF.items():
+#             for rule in body:
+#                 if len(rule) == 1 and rule[0] == W[j]:
+#                     T[j][j].append(head)
 
-        for i in range(j, -1, -1):
-            for k in range(i, j):
-                for head, body in CNF.items():
-                    for rule in body:
-                        if len(rule) == 2 and rule[0] in T[i][k] and rule[1] in T[k + 1][j]:
-                            T[i][j].add(head)
+#         for i in range(j, -1, -1):
+#             for k in range(i, j):
+#                 for head, body in CNF.items():
+#                     for rule in body:
+#                         if len(rule) == 2 and rule[0] in T[i][k] and rule[1] in T[k + 1][j]:
+#                             T[i][j].append(head)
 
-    # print(T[0][N - 1])
-    print_table(T)
-    return len(T[0][N - 1]) != 0
+#     # print(T[0][N - 1])
 
-def get_list_highest_from_top(table):
-    w_length = len(table)
-    highest = []
-    for i in range(w_length-1, -1, -1):
-        for j in range(w_length):
-            if len(table[i][j]) > 0:
-                highest = table[i][j]
-                return highest
-
-def get_list_highest_from_left(table):
-    w_length = len(table)
-    highest = []
-    for i in range(w_length-1, -1, -1):
-        if len(table[i][0]) > 0:
-            highest = table[i][0]
-            return highest
-                
+#     return len(T[0][N - 1]) != 0
 
 def CYK(CNF, input):
     # I.S. CNF adalah CFG dalam bentuk CNF
@@ -76,30 +58,29 @@ def CYK(CNF, input):
         return True
 
     R = CNF[2]
-    # sys.stdout = open('CNF.txt', 'w')
-    # for key, value in R.items():
-    #     print(key, value)
-    #     print()
     # Inisialisasi tabel CYK
     table = [[[] for j in range(w_length)] for i in range(w_length)]
+    sys.stdout = open('CNF.txt', 'w')
+    for key, value in R.items():
+        print(key, value)
 
     # Isi tabel CYK
-    for i in range(1, w_length + 1):  # Iterasi untuk length 1 sampai (w_length)
+    for i in range(0, w_length):  # Iterasi untuk length 1 sampai (w_length)
         # Proses untuk baris pertama, yaitu baris yang memiliki length 1
-        if i == 1:
+        if i == 0:
             for j in range(w_length):
                 # Cari production rule yang memiliki terminal symbol yang sama dengan input
                 for prod, rules in R.items():
                     for rule in rules:
                         # Jika terminal symbol sama, masukkan prod ke tabel
-                        if rule[0] == input[j]:
-                            table[i - 1][j].append(prod)
+                        if rule[0] == input[j] and prod not in table[0][j]:
+                            table[0][j].append(prod)
 
         # Untuk baris selanjutnya, proses dapat dilakukan dengan mengambil kombinasi dari baris sebelumnya
         else:
             # Cari semua kombinasi (m, n) dari yang mungkin untuk string dengan length i 
-            combination = decompose_combination(i)
-            for j in range(w_length - i + 1):
+            combination = decompose_combination(i+1)
+            for j in range(w_length - i):
                 for m, n in combination:
                     # Cari semua kombinasi dari baris sebelumnya dengan cartesian product
                     possible_constructor = cartesian_product(table[m - 1][j], table[n - 1][j + m])
@@ -107,13 +88,14 @@ def CYK(CNF, input):
                     for prod, rules in R.items():
                         for rule in rules:
                             # Jika kombinasi sama, masukkan prod ke tabel
-                            if rule in possible_constructor and prod not in table[i - 1][j]:
-                                table[i - 1][j].append(prod)
+                            if rule in possible_constructor and prod not in table[i][j]:
+                                table[i][j].append(prod)
     
-
-    #print_table(table)
+    
+    sys.stdout = open('table.txt', 'w')
+    print_table(table)
     # Cek apakah Start Symbol ada di tabel CYK paling atas
-    if CNF[3] in get_list_highest_from_left(table) or CNF[3] in get_list_highest_from_top(table):
+    if CNF[3] in table[w_length - 1][0]:
         return True
     else:
         return False

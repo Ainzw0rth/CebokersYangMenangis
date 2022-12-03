@@ -1,11 +1,13 @@
 from FA import isVariable
 from grammar_reader import is_terminal
+import sys
 
 # referensi : https://www.youtube.com/watch?v=7G0PwGrdlH8&ab_channel=Education4u
 
 def CFG_to_CNF(CFG):
     # STEP 2 : JADIKAN SEBAGAI NORMAL FORM
     ada = True
+    sys.stdout = open("CFGtoCNF.txt", "w")
 
     while ada:
         satuElemen = {}
@@ -13,7 +15,7 @@ def CFG_to_CNF(CFG):
         
         for key, value in CFG.items():
             for rule in value:
-                if len(rule) == 1 and isVariable(rule[0]):
+                if len(rule) == 1 and not is_terminal(rule[0]):
                     ada = True
                     if key not in satuElemen.keys():
                         satuElemen[key] = [[rule[0]]]
@@ -36,6 +38,10 @@ def CFG_to_CNF(CFG):
                 if len(rule_unit) == 1:
                     CFG[keySatuElemen].remove(rule_unit)
 
+    print("====================== STEP 1 ===========================")
+    for key, value in CFG.items():
+        print(key, value)
+
     # STEP 3: ganti rules yang memiliki 3 atau lebih elemen
     RulesBaru = {}
     del_productions = {}
@@ -54,16 +60,16 @@ def CFG_to_CNF(CFG):
                 temp = ruleTambahan 
                 temp_rule.remove(temp_rule[0])
                 i += 1
+
+            if temp not in RulesBaru.keys():
+                RulesBaru[temp] = [temp_rule]
             else:
-                if temp not in RulesBaru.keys():
-                    RulesBaru[temp] = [temp_rule]
-                else:
-                    RulesBaru[temp].append(temp_rule)
-                
-                if key not in del_productions.keys():
-                    del_productions[key] = [rule]
-                else:
-                    del_productions[key].append(rule)
+                RulesBaru[temp].append(temp_rule)
+            
+            if key not in del_productions.keys():
+                del_productions[key] = [rule]
+            else:
+                del_productions[key].append(rule)
 
     for new_head, new_body in RulesBaru.items():
         if new_head not in CFG.keys():
@@ -74,6 +80,10 @@ def CFG_to_CNF(CFG):
     for del_head, del_body in del_productions.items():
         for del_rule in del_body:
             CFG[del_head].remove(del_rule)
+
+    print("====================== STEP 3 ===========================")
+    for key, value in CFG.items():
+        print(key, value)
 
     # STEP 4: ganti elemen yang terminal jadi variable rules baru
     RulesBaru = {}
@@ -88,6 +98,9 @@ def CFG_to_CNF(CFG):
                 temp.append(r)
 
             for x in range(len(rule)):
+                if len(rule) == 1:
+                    ada = False
+                    break
                 if is_terminal(rule[x]):
                     ada = True
                     simbolbaruX = f"X{i}"
@@ -100,8 +113,11 @@ def CFG_to_CNF(CFG):
                     RulesBaru[head] = [temp]
                 else:
                     RulesBaru[head].append(temp)
-            else:
-                pass
+
+                if head not in RulesLama.keys():
+                    RulesLama[head] = [rule]
+                else:
+                    RulesLama[head].append(rule)
 
     for new_head, new_body in RulesBaru.items():
         if new_head not in CFG.keys():
@@ -109,8 +125,19 @@ def CFG_to_CNF(CFG):
         else:
             CFG[new_head].extend(new_body)
 
+    print("====================== RULES LAMA ===========================")
+    for key, value in RulesLama.items():
+        print(key, value)
     for del_head, del_body in RulesLama.items():
         for del_rule in del_body:
             CFG[del_head].remove(del_rule)
+
+    print("====================== RULES BARU ===========================")
+    for key, value in RulesBaru.items():
+        print(key, value)
+
+    print("====================== STEP 4 ===========================")
+    for key, value in CFG.items():
+        print(key, value)
 
     return CFG
