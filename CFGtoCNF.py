@@ -1,14 +1,10 @@
 from FA import isVariable
 from grammar_reader import is_terminal
-import sys
-
 # referensi : https://www.youtube.com/watch?v=7G0PwGrdlH8&ab_channel=Education4u
 
 def CFG_to_CNF(CFG):
     # STEP 2 : JADIKAN SEBAGAI NORMAL FORM
     ada = True
-    sys.stdout = open("CFGtoCNF.txt", "w")
-
     while ada:
         satuElemen = {}
         ada = False
@@ -37,10 +33,6 @@ def CFG_to_CNF(CFG):
             for rule_unit in valueSatuElemen:
                 if len(rule_unit) == 1:
                     CFG[keySatuElemen].remove(rule_unit)
-
-    print("====================== STEP 1 ===========================")
-    for key, value in CFG.items():
-        print(key, value)
 
     # STEP 3: ganti rules yang memiliki 3 atau lebih elemen
     RulesBaru = {}
@@ -80,10 +72,6 @@ def CFG_to_CNF(CFG):
     for del_head, del_body in del_productions.items():
         for del_rule in del_body:
             CFG[del_head].remove(del_rule)
-
-    print("====================== STEP 3 ===========================")
-    for key, value in CFG.items():
-        print(key, value)
 
     # STEP 4: ganti elemen yang terminal jadi variable rules baru
     RulesBaru = {}
@@ -125,19 +113,9 @@ def CFG_to_CNF(CFG):
         else:
             CFG[new_head].extend(new_body)
 
-    print("====================== RULES LAMA ===========================")
-    for key, value in RulesLama.items():
-        print(key, value)
     for del_head, del_body in RulesLama.items():
         for del_rule in del_body:
             CFG[del_head].remove(del_rule)
 
-    print("====================== RULES BARU ===========================")
-    for key, value in RulesBaru.items():
-        print(key, value)
-
-    print("====================== STEP 4 ===========================")
-    for key, value in CFG.items():
-        print(key, value)
 
     return CFG

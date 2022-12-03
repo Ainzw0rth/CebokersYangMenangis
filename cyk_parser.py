@@ -1,5 +1,3 @@
-import sys
-
 # This is the example of input CNF
 NULL = None
 
@@ -60,9 +58,6 @@ def CYK(CNF, input):
     R = CNF[2]
     # Inisialisasi tabel CYK
     table = [[[] for j in range(w_length)] for i in range(w_length)]
-    sys.stdout = open('CNF.txt', 'w')
-    for key, value in R.items():
-        print(key, value)
 
     # Isi tabel CYK
     for i in range(0, w_length):  # Iterasi untuk length 1 sampai (w_length)
@@ -91,9 +86,7 @@ def CYK(CNF, input):
                             if rule in possible_constructor and prod not in table[i][j]:
                                 table[i][j].append(prod)
     
-    
-    sys.stdout = open('table.txt', 'w')
-    print_table(table)
+
     # Cek apakah Start Symbol ada di tabel CYK paling atas
     if CNF[3] in table[w_length - 1][0]:
         return True

@@ -13,12 +13,7 @@ def parseFile(filename):
 
     file.close()
 
-    print("Converting grammar...")
     input_string, expressions, variables = string_to_grammar(input_string)
-    print("Grammar converted")
-    print(input_string)
-    # print(expressions)
-    # print(variables)
     
     # CEK ALL EXPRESSIONS VALIDITY
     expressionValid = True
@@ -26,10 +21,6 @@ def parseFile(filename):
     while expressionValid and i < len(expressions):
         expressionValid = isOperasiValid(expressions[i])
         i += 1
-
-    print("Expression Valid: ", expressionValid)
-    print(expressions)
-
     # CEK ALL VARIABLES VALIDITY
     variableValid = True
     i = 0
@@ -37,10 +28,8 @@ def parseFile(filename):
         variableValid = isVariable(variables[i])
         i += 1
 
-    print("Variable valid: ", variableValid)
-
     # # Get The CNF
-    CFG = cfg_from_file("grammarNew.txt")
+    CFG = cfg_from_file("grammar.txt")
     V = CFG_to_CNF(CFG[2])
     CNF = (CFG[0], CFG[1], V, CFG[3])
     
